@@ -45,6 +45,8 @@ npm --version
 
 Angular CLI est l'outil en ligne de commande qui automatise tout (création de projet, génération de composants, build).
 
+Sous Angular 21, les applications sont créées en mode *standalone* par défaut et le CLI peut afficher des questions légèrement différentes selon sa version. L'idée reste la même: partir sur une base simple, sans options avancées au début.
+
 ```bash
 npm install -g @angular/cli
 ```
@@ -83,8 +85,8 @@ Angular CLI te pose des questions :
 | Question | Réponse recommandée |
 |---|---|
 | Which stylesheet format would you like to use? | **SCSS** (plus puissant que CSS) |
-| Do you want to enable Server-Side Rendering (SSR)? | **No** (pour démarrer simple) |
-| Zoneless ? | **No** (par défaut, on apprend avec Zone.js) |
+| Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG)? | **No** (pour démarrer simple) |
+| Zoneless ? | **No** (si la question apparaît, on garde l'approche classique pour apprendre) |
 
 ⏳ Patiente 1-2 minutes (npm installe ~1 Go de dépendances).
 
@@ -117,9 +119,9 @@ mon-premier-projet/
 ├── public/               ← fichiers statiques (favicon, images)
 ├── src/                  ← TON CODE est ici
 │   ├── app/              ← composants de l'application
-│   │   ├── app.component.ts
-│   │   ├── app.component.html
-│   │   ├── app.component.scss
+│   │   ├── app.ts
+│   │   ├── app.html
+│   │   ├── app.scss
 │   │   ├── app.config.ts
 │   │   └── app.routes.ts
 │   ├── index.html        ← page HTML racine
@@ -130,23 +132,25 @@ mon-premier-projet/
 └── tsconfig.json         ← config TypeScript
 ```
 
-### 4.2 Que contient `app.component.ts` ?
+### 4.2 Que contient `app.ts` ?
 
-Ouvre `src/app/app.component.ts` :
+Ouvre `src/app/app.ts` :
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Hello } from './hello/hello';
+import { Profil } from './profil/profil';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [RouterOutlet, Hello, Profil],
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {
-  title = 'mon-premier-projet';
+export class App {
+  protected readonly title = signal('Angular 21');
 }
 ```
 
@@ -158,14 +162,27 @@ export class AppComponent {
 - `imports` : autres composants/directives utilisés dans le template
 - `templateUrl` : le HTML lié
 - `styleUrl` : le CSS lié
+- `signal(...)` : une valeur réactive que l'on lit dans le template avec `title()`
 
 ### 4.3 Le template
 
-Ouvre `src/app/app.component.html`. C'est rempli de HTML "marketing" Angular. **Vide tout** et remplace par :
+Ouvre `src/app/app.html`. C'est rempli de HTML "marketing" Angular. **Vide tout** et remplace par :
 
 ```html
-<h1>Bonjour {{ title }} !</h1>
-<router-outlet></router-outlet>
+<main class="page-shell">
+  <section class="hero">
+    <p class="eyebrow">Angular 21 · composants standalone</p>
+    <h1>Bonjour {{ title() }} !</h1>
+    <p class="intro">Cette page regroupe les composants du TP du jour 1 : un composant Hello, puis une carte Profil.</p>
+  </section>
+
+  <section class="cards">
+    <app-hello></app-hello>
+    <app-profil></app-profil>
+  </section>
+
+  <router-outlet></router-outlet>
+</main>
 ```
 
 Sauvegarde → la page se recharge → tu vois ton message. ✅
@@ -184,15 +201,15 @@ ng generate component hello
 ng g c hello
 ```
 
-Angular crée 4 fichiers dans `src/app/hello/` :
-- `hello.component.ts`
-- `hello.component.html`
-- `hello.component.scss`
-- `hello.component.spec.ts` (tests)
+Dans une application standalone Angular 21, la CLI crée 4 fichiers dans `src/app/hello/` :
+- `hello.ts`
+- `hello.html`
+- `hello.scss`
+- `hello.spec.ts` (tests)
 
 ### 5.2 Modifier le composant
 
-Ouvre `src/app/hello/hello.component.ts` :
+Ouvre `src/app/hello/hello.ts` :
 
 ```typescript
 import { Component } from '@angular/core';
@@ -201,16 +218,16 @@ import { Component } from '@angular/core';
   selector: 'app-hello',
   standalone: true,
   imports: [],
-  templateUrl: './hello.component.html',
-  styleUrl: './hello.component.scss'
+  templateUrl: './hello.html',
+  styleUrl: './hello.scss'
 })
-export class HelloComponent {
+export class Hello {
   prenom = 'Mouad';
   age = 25;
 }
 ```
 
-Ouvre `src/app/hello/hello.component.html` :
+Ouvre `src/app/hello/hello.html` :
 
 ```html
 <div class="hello-card">
@@ -219,7 +236,7 @@ Ouvre `src/app/hello/hello.component.html` :
 </div>
 ```
 
-Ouvre `src/app/hello/hello.component.scss` :
+Ouvre `src/app/hello/hello.scss` :
 
 ```scss
 .hello-card {
@@ -237,36 +254,44 @@ Ouvre `src/app/hello/hello.component.scss` :
 
 ### 5.3 Utiliser le composant
 
-Ouvre `src/app/app.component.ts` et **importe** `HelloComponent` :
+Ouvre `src/app/app.ts` et **importe** `Hello` et `Profil` :
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HelloComponent } from './hello/hello.component';   // ← AJOUTER
+import { Hello } from './hello/hello';   // ← AJOUTER
+import { Profil } from './profil/profil';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HelloComponent],   // ← AJOUTER ici aussi
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [RouterOutlet, Hello, Profil],   // ← AJOUTER ici aussi
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {
-  title = 'mon-premier-projet';
+export class App {
+  protected readonly title = signal('Angular 21');
 }
 ```
 
-Ouvre `src/app/app.component.html` :
+Ouvre `src/app/app.html` :
 
 ```html
-<h1>Bonjour {{ title }} !</h1>
+<main class="page-shell">
+  <section class="hero">
+    <p class="eyebrow">Angular 21 · composants standalone</p>
+    <h1>Bonjour {{ title() }} !</h1>
+  </section>
 
 <app-hello></app-hello>
 
+<app-profil></app-profil>
+
 <router-outlet></router-outlet>
+</main>
 ```
 
-✅ **Sauvegarde et regarde** ! Tu vois ta carte violette s'afficher.
+✅ **Sauvegarde et regarde** ! Tu vois les deux cartes s'afficher.
 
 ---
 
@@ -288,7 +313,9 @@ Crée un composant `<app-profil>` qui affiche :
 ng g c profil
 ```
 
-**2. Dans `profil.component.ts`** :
+Dans Angular 21, la CLI crée `profil.ts`, `profil.html`, `profil.scss` et `profil.spec.ts`.
+
+**2. Dans `profil.ts`** :
 
 ```typescript
 import { Component } from '@angular/core';
@@ -297,13 +324,13 @@ import { Component } from '@angular/core';
   selector: 'app-profil',
   standalone: true,
   imports: [],
-  templateUrl: './profil.component.html',
-  styleUrl: './profil.component.scss'
+  templateUrl: './profil.html',
+  styleUrl: './profil.scss'
 })
-export class ProfilComponent {
+export class Profil {
   nom = 'Mouad';
-  metier = 'Fullstack Developer & Formateur IT';
-  photo = 'https://i.pravatar.cc/150?img=12';
+  metier = 'Formateur Angular 21';
+  photo = 'https://i.pravatar.cc/240?img=12';
 
   contacter() {
     alert(`Contacter ${this.nom}`);
@@ -311,54 +338,77 @@ export class ProfilComponent {
 }
 ```
 
-**3. Dans `profil.component.html`** :
+**3. Dans `profil.html`** :
 
 ```html
-<div class="profil">
-  <img [src]="photo" [alt]="nom">
+<article class="profil-card">
+  <img [src]="photo" [alt]="nom" />
   <h3>{{ nom }}</h3>
   <p>{{ metier }}</p>
-  <button (click)="contacter()">Contacter</button>
-</div>
+  <button type="button" (click)="contacter()">Contacter</button>
+</article>
 ```
 
-**4. Dans `profil.component.scss`** :
+**4. Dans `profil.scss`** :
 
 ```scss
-.profil {
-  text-align: center;
+.profil-card {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
   padding: 24px;
-  border: 1px solid #e0e0e0;
-  border-radius: 16px;
-  max-width: 280px;
-  margin: 20px auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 24px;
+  background: linear-gradient(160deg, #0f172a 0%, #172554 48%, #4338ca 100%);
+  color: #f8fbff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.22);
 
   img {
-    width: 120px;
-    height: 120px;
+    width: 124px;
+    height: 124px;
     border-radius: 50%;
     object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.2);
   }
 
-  h3 { margin: 12px 0 4px; }
-  p  { color: #666; margin: 0 0 16px; }
+  h3,
+  p {
+    margin: 0;
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 1.45rem;
+  }
+
+  p {
+    color: rgba(248, 251, 255, 0.82);
+  }
 
   button {
-    padding: 10px 24px;
-    background: #3f51b5;
-    color: white;
-    border: none;
-    border-radius: 8px;
+    margin-top: 6px;
+    padding: 0.85rem 1.35rem;
+    border: 0;
+    border-radius: 999px;
+    background: #f8fbff;
+    color: #172554;
+    font: inherit;
+    font-weight: 700;
     cursor: pointer;
-    font-size: 14px;
+    transition:
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      background 150ms ease;
 
-    &:hover { background: #303f9f; }
+    &:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+    }
   }
 }
 ```
 
-**5. Ajoute le composant dans `app.component.ts`** (imports) **et `app.component.html`** :
+**5. Ajoute le composant dans `app.ts`** (imports) **et `app.html`** :
 
 ```html
 <app-profil></app-profil>

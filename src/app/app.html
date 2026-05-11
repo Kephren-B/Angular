@@ -1,4 +1,17 @@
-<h1>Bonjour {{ title ()}} !</h1>
+<main class="page-shell">
+  <section class="hero">
+    <p class="eyebrow">Angular 21 · composants standalone</p>
+    <h1>Bonjour {{ title() }} !</h1>
+    <p class="intro">
+      Cette page regroupe les composants du TP du jour 1 : un composant Hello, puis une carte
+      Profil.
+    </p>
+  </section>
 
-<app-hello></app-hello>
-<router-outlet></router-outlet>
+  <section class="cards">
+    <app-hello></app-hello>
+    <app-profil></app-profil>
+  </section>
+
+  <router-outlet></router-outlet>
+</main>
