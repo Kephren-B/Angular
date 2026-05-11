@@ -1,0 +1,48 @@
+<div class="task-list-container">
+  <h1>📝 Ma TodoList</h1>
+
+  <app-task-form (add)="onAddTask($event)"></app-task-form>
+
+  <div class="filter-buttons">
+    <button
+      (click)="setFilter('all')"
+      class="filter-btn"
+      [class.active]="(filter$ | async) === 'all'"
+    >
+      Toutes
+    </button>
+    <button
+      (click)="setFilter('active')"
+      class="filter-btn"
+      [class.active]="(filter$ | async) === 'active'"
+    >
+      Actives
+    </button>
+    <button
+      (click)="setFilter('completed')"
+      class="filter-btn"
+      [class.active]="(filter$ | async) === 'completed'"
+    >
+      Terminées
+    </button>
+  </div>
+
+  <div class="tasks-wrapper">
+    @let tasks = (tasks$ | async);
+    @if (tasks && tasks.length > 0) {
+      <div class="task-list">
+        @for (task of tasks; track task.id) {
+          <app-task-item
+            [task]="task"
+            (toggle)="onToggleTask($event)"
+            (delete)="onDeleteTask($event)"
+          ></app-task-item>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>Aucune tâche trouvée.</p>
+      </div>
+    }
+  </div>
+</div>
