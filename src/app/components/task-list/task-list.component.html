@@ -28,7 +28,7 @@
   </div>
 
   <div class="tasks-wrapper">
-    @let tasks = (tasks$ | async);
+    @let tasks = tasks$ | async;
     @if (tasks && tasks.length > 0) {
       <div class="task-list">
         @for (task of tasks; track task.id) {

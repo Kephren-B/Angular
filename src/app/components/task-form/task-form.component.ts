@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: 'app-task-form',
-  standalone: true,
-  imports: [FormsModule],
-  template: `
+	selector: "app-task-form",
+	standalone: true,
+	imports: [FormsModule],
+	template: `
     <form (ngSubmit)="onSubmit()" class="task-form">
       <input
         type="text"
@@ -18,16 +18,16 @@ import { FormsModule } from '@angular/forms';
       <button type="submit" class="add-btn">Ajouter</button>
     </form>
   `,
-  styleUrl: './task-form.component.scss',
+	styleUrl: "./task-form.component.scss",
 })
 export class TaskFormComponent {
-  @Output() add = new EventEmitter<string>();
-  newTaskTitle = '';
+	@Output() add = new EventEmitter<string>();
+	newTaskTitle = "";
 
-  onSubmit(): void {
-    if (this.newTaskTitle.trim()) {
-      this.add.emit(this.newTaskTitle.trim());
-      this.newTaskTitle = '';
-    }
-  }
+	onSubmit(): void {
+		if (this.newTaskTitle.trim()) {
+			this.add.emit(this.newTaskTitle.trim());
+			this.newTaskTitle = "";
+		}
+	}
 }

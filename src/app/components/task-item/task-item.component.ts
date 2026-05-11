@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Task } from '../../models/task.model';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Task } from "../../models/task.model";
 
 @Component({
-  selector: 'app-task-item',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+	selector: "app-task-item",
+	standalone: true,
+	imports: [CommonModule],
+	template: `
     <div class="task-item" [class.done]="task.done">
       <input
         type="checkbox"
@@ -21,18 +21,18 @@ import { Task } from '../../models/task.model';
       </button>
     </div>
   `,
-  styleUrl: './task-item.component.scss',
+	styleUrl: "./task-item.component.scss",
 })
 export class TaskItemComponent {
-  @Input({ required: true }) task!: Task;
-  @Output() toggle = new EventEmitter<string>();
-  @Output() delete = new EventEmitter<string>();
+	@Input({ required: true }) task!: Task;
+	@Output() toggle = new EventEmitter<string>();
+	@Output() delete = new EventEmitter<string>();
 
-  onToggle(): void {
-    this.toggle.emit(this.task.id);
-  }
+	onToggle(): void {
+		this.toggle.emit(this.task.id);
+	}
 
-  onDelete(): void {
-    this.delete.emit(this.task.id);
-  }
+	onDelete(): void {
+		this.delete.emit(this.task.id);
+	}
 }
