@@ -9,7 +9,7 @@ import { Component } from "@angular/core";
 })
 export class Profil {
 	nom = "moi";
-	metier = "Développeur Angular";
+	metier = "Lebensmittelüberwachungsassistent";
 	photo = "https://i.pravatar.cc/240";
 
 	contacter() {
