@@ -5,9 +5,10 @@ import { FavorisService } from "./services/favoris.service";
 
 @Component({
 	selector: "app-root",
+	standalone: true,
 	imports: [RouterOutlet, RouterLink, RouterLinkActive],
 	templateUrl: "./app.html",
-	styleUrl: "./app.scss",
+	styleUrls: ["./app.scss"],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
