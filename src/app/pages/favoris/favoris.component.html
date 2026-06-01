@@ -1,0 +1,17 @@
+<section class="page-header">
+  <p class="eyebrow">Collection</p>
+  <h1>Mes favoris</h1>
+</section>
+
+@if (favoris.favoris().length === 0) {
+  <div class="feedback" role="status">Aucun favori pour l’instant. Ajoute-en depuis une fiche Pokémon.</div>
+} @else {
+  <ul class="favorites-list">
+    @for (name of favoris.favoris(); track name) {
+      <li>
+        <a [routerLink]="['/pokemon', name]">{{ name }}</a>
+        <button type="button" (click)="favoris.basculer(name)" aria-label="Retirer des favoris">✕</button>
+      </li>
+    }
+  </ul>
+}

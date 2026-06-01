@@ -1,0 +1,35 @@
+<section class="page-hero">
+  <div>
+    <p class="eyebrow">Pokédex</p>
+    <h1>Les 151 premiers Pokémon</h1>
+    <p class="lead">Recherche instantanée, fiches détaillées et favoris partagés entre les pages.</p>
+  </div>
+
+  <label class="search-box">
+    <span class="sr-only">Rechercher un Pokémon</span>
+    <input
+      type="search"
+      placeholder="Rechercher un Pokémon…"
+      [value]="search()"
+      (input)="onSearch($event)"
+    />
+  </label>
+</section>
+
+@if (state().status === 'loading') {
+  <div class="feedback" role="status" aria-live="polite">Chargement des Pokémon…</div>
+} @else if (state().status === 'error') {
+  <div class="feedback feedback-error" role="alert">{{ state().error }}</div>
+} @else {
+  <section class="grid" aria-label="Liste des Pokémon">
+    @for (pokemon of filteredPokemons(); track pokemon.id) {
+      <a class="card" [routerLink]="['/pokemon', pokemon.name]">
+        <span class="card-number">#{{ pokemon.id }}</span>
+        <img [src]="pokemon.image" [alt]="pokemon.name" loading="lazy" width="160" height="160" />
+        <span class="card-name">{{ pokemon.name }}</span>
+      </a>
+    } @empty {
+      <div class="feedback" role="status">Aucun Pokémon ne correspond à « {{ search() }} ».</div>
+    }
+  </section>
+}

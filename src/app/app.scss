@@ -1,0 +1,77 @@
+.shell-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	backdrop-filter: blur(16px);
+}
+
+.navbar {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 1rem 1.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	border-bottom: 1px solid rgba(247, 174, 63, 0.18);
+	background: color-mix(in srgb, var(--surface) 82%, transparent);
+}
+
+.brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 1.1rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: var(--text);
+}
+
+.brand-mark {
+	display: inline-grid;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 999px;
+	background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+	color: var(--surface);
+	box-shadow: 0 12px 24px rgba(239, 84, 80, 0.3);
+}
+
+.nav-links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.nav-links a {
+	padding: 0.6rem 0.95rem;
+	border-radius: 999px;
+	text-decoration: none;
+	color: var(--muted);
+	border: 1px solid transparent;
+	transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+	color: var(--text);
+	background: rgba(247, 174, 63, 0.12);
+	border-color: rgba(247, 174, 63, 0.2);
+	transform: translateY(-1px);
+}
+
+.nav-links a.is-active {
+	color: var(--text);
+	background: rgba(239, 84, 80, 0.14);
+	border-color: rgba(239, 84, 80, 0.22);
+}
+
+.shell-main {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 2rem 1.25rem 3rem;
+}

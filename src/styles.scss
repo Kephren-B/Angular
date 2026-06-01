@@ -1,1 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+	color-scheme: light;
+	--bg: #fff7ed;
+	--surface: #fffdf8;
+	--text: #1e293b;
+	--muted: #6b7280;
+	--accent: #ef5350;
+	--accent-strong: #f7ae3f;
+	--border: rgba(30, 41, 59, 0.1);
+	--shadow: 0 18px 60px rgba(30, 41, 59, 0.12);
+}
+
+html {
+	min-height: 100%;
+	background:
+		radial-gradient(circle at top left, rgba(247, 174, 63, 0.32), transparent 28%),
+		radial-gradient(circle at top right, rgba(239, 84, 80, 0.22), transparent 34%),
+		linear-gradient(180deg, var(--bg) 0%, #fff 100%);
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	color: var(--text);
+	font-family: 'Outfit', 'Trebuchet MS', 'Gill Sans', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+button,
+input {
+	font: inherit;
+}
+
+a,
+button,
+input {
+	-webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+	outline: 3px solid color-mix(in srgb, var(--accent) 65%, white);
+	outline-offset: 3px;
+}

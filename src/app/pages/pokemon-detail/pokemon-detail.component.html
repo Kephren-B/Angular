@@ -1,0 +1,55 @@
+<a class="back-link" routerLink="/">← Retour à la liste</a>
+
+@if (state().status === 'loading') {
+  <div class="feedback" role="status" aria-live="polite">Chargement de {{ name() }}…</div>
+} @else if (state().status === 'error') {
+  <div class="feedback feedback-error" role="alert">{{ state().error }}</div>
+} @else {
+  <article class="detail-card">
+    <header class="detail-header">
+      <div>
+        <p class="eyebrow">#{{ state().pokemon?.id }}</p>
+        <h1>{{ state().pokemon?.name }}</h1>
+      </div>
+
+      <button type="button" class="fav-button" (click)="favoris.basculer(state().pokemon!.name)">
+        {{ favoris.estFavori(state().pokemon!.name) ? '★ Retirer des favoris' : '☆ Ajouter aux favoris' }}
+      </button>
+    </header>
+
+    <div class="visual">
+      <img
+        [src]="state().pokemon!.sprites.other['official-artwork'].front_default ?? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/0.png'"
+        [alt]="state().pokemon?.name ?? 'Pokémon'"
+        width="320"
+        height="320"
+      />
+    </div>
+
+    <div class="chips" aria-label="Types du Pokémon">
+      @for (type of state().pokemon!.types; track type.type.name) {
+        <span class="chip">{{ type.type.name }}</span>
+      }
+    </div>
+
+    <ul class="facts">
+      <li><span>Taille</span><strong>{{ state().pokemon!.height / 10 }} m</strong></li>
+      <li><span>Poids</span><strong>{{ state().pokemon!.weight / 10 }} kg</strong></li>
+    </ul>
+
+    <section aria-labelledby="stats-title">
+      <h2 id="stats-title">Statistiques</h2>
+      <ul class="stats">
+        @for (stat of state().pokemon!.stats; track stat.stat.name) {
+          <li>
+            <span class="stat-name">{{ stat.stat.name }}</span>
+            <span class="stat-bar" aria-hidden="true">
+              <span class="stat-fill" [style.width.%]="stat.base_stat / 2"></span>
+            </span>
+            <strong class="stat-value">{{ stat.base_stat }}</strong>
+          </li>
+        }
+      </ul>
+    </section>
+  </article>
+}
