@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "Angular": {
+    "mon-premier-projet": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Angular:build:production"
+              "buildTarget": "mon-premier-projet:build:production"
             },
             "development": {
-              "buildTarget": "Angular:build:development"
+              "buildTarget": "mon-premier-projet:build:development"
             }
           },
           "defaultConfiguration": "development"
