@@ -1,0 +1,17 @@
+{
+  "contacts": [
+    {
+      "id": "1",
+      "nom": "Sara Idrissi",
+      "email": "sara.new@mail.com",
+      "tel": "0612345678"
+    },
+    {
+      "nom": "Marie Dupont",
+      "email": "marie@mail.com",
+      "tel": "0645623145",
+      "id": "QDFHvNLVZXQ"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
