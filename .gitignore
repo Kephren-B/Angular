@@ -1,17 +1,36 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
 # Compiled output
 /dist
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
+# Node et gestionnaire de paquets
 /node_modules
+pnpm-lock.yaml.backup
 npm-debug.log
 yarn-error.log
+package-lock.json
 
-# IDEs and editors
+# Angular
+/.angular/cache
+/angular.json.bak
+
+# Cache
+.sass-cache/
+.prettier-cache
+
+# Build et test
+/coverage
+/vitest.ui
+__screenshots__/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+lerna-debug.log*
+
+# IDEs et éditeurs
 .idea/
 .project
 .classpath
@@ -19,21 +38,27 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+*.swp
+*.swo
+*~
 
 # Visual Studio Code
-.vscode
-.history/*
+.vscode/
+.history/
+.vscode-insiders/
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
+# WebStorm
+*.iml
 
-# System files
+# Fichiers système
 .DS_Store
 Thumbs.db
+.env.local
+.env.*.local
+
+# Fichiers temporaires
+/connect.lock
+/typings
+*.tmp
+
+.cours
