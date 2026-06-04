@@ -6,6 +6,7 @@ import {
   computed,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { BehaviorSubject, map } from "rxjs";
 import { CharacterService } from "../services/character.service";
 import { FavorisService } from "../services/favoris.service";
 import {
@@ -20,11 +21,12 @@ import {
 import { AsyncPipe } from "@angular/common";
 import { CharacterCardComponent } from "../components/character-card.component";
 import { LoaderComponent } from "../components/loader.component";
+import { PaginatorComponent } from "../components/paginator.component";
 
 @Component({
   selector: "app-characters-list",
   standalone: true,
-  imports: [ReactiveFormsModule, AsyncPipe, CharacterCardComponent, LoaderComponent],
+	imports: [ReactiveFormsModule, AsyncPipe, CharacterCardComponent, LoaderComponent, PaginatorComponent],
   template: `
     <h2>Personnages</h2>
     <div class="filters">
@@ -50,6 +52,11 @@ import { LoaderComponent } from "../components/loader.component";
     } @else {
       <app-loader></app-loader>
     }
+    <app-paginator 
+      [currentPage]="currentPage()" 
+      [totalPages]="totalPages()"
+      (next)="nextPage()"
+    />
   `,
   styles: [
     `
@@ -66,6 +73,10 @@ export class CharactersListComponent {
 
   searchCtrl = new FormControl("", { nonNullable: true });
   statusCtrl = new FormControl("all", { nonNullable: true });
+  private readonly page$ = new BehaviorSubject<number>(1);
+  private readonly pageSignal = signal(1);
+  readonly currentPage = this.pageSignal.asReadonly();
+  readonly totalPages = signal(0);
 
   readonly data$ = combineLatest([
     this.searchCtrl.valueChanges.pipe(
@@ -74,11 +85,24 @@ export class CharactersListComponent {
       distinctUntilChanged(),
     ),
     this.statusCtrl.valueChanges.pipe(startWith("all")),
+    this.page$.asObservable(),
   ]).pipe(
-    switchMap(([name, status]) =>
+    switchMap(([name, status, page]) =>
       this.characterService
-        .getAll(1, name, status)
-        .pipe(catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] }))),
+        .getAll(page, name, status)
+        .pipe(
+          catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] })),
+          map((res) => {
+            this.totalPages.set(res.info.pages);
+            return res;
+          }),
+        ),
     ),
   );
+
+  nextPage() {
+    const next = this.page$.value + 1;
+    this.page$.next(next);
+    this.pageSignal.set(next);
+  }
 }

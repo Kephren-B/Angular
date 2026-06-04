@@ -1,10 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { BehaviorSubject } from "rxjs";
 import { LocationService } from "../services/location.service";
 import {
   debounceTime,
@@ -14,14 +10,14 @@ import {
   catchError,
   of,
 } from "rxjs";
-import { toObservable } from "@angular/core/rxjs-interop";
 import { AsyncPipe } from "@angular/common";
+import { RouterLink } from "@angular/router";
 import { PaginatorComponent } from "../components/paginator.component";
 
 @Component({
   selector: "app-locations-list",
   standalone: true,
-  imports: [ReactiveFormsModule, AsyncPipe, PaginatorComponent],
+	imports: [ReactiveFormsModule, AsyncPipe, RouterLink, PaginatorComponent],
   template: `
     <h2>Lieux</h2>
     <div class="filters">
@@ -31,11 +27,11 @@ import { PaginatorComponent } from "../components/paginator.component";
     @if (data$ | async; as res) {
       <div class="grid">
         @for (loc of res.results; track loc.id) {
-          <div class="card">
+          <a [routerLink]="['/locations', loc.id]" class="card">
             <h3>{{ loc.name }}</h3>
             <p>Type : {{ loc.type }}</p>
             <p>Dimension : {{ loc.dimension }}</p>
-          </div>
+          </a>
         }
       </div>
       <app-paginator 
@@ -59,8 +55,9 @@ import { PaginatorComponent } from "../components/paginator.component";
 })
 export class LocationsListComponent {
   private readonly locationService = inject(LocationService);
-  private readonly page = signal(1);
-  readonly currentPage = this.page.asReadonly();
+  private readonly page$ = new BehaviorSubject<number>(1);
+  private readonly pageSignal = signal(1);
+  readonly currentPage = this.pageSignal.asReadonly();
 
   searchCtrl = new FormControl("", { nonNullable: true });
 
@@ -69,17 +66,19 @@ export class LocationsListComponent {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((name) =>
-      toObservable(this.page).pipe(
-        switchMap((p: number) =>
-          this.locationService
-            .getAll(p, name)
-            .pipe(catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] }))),
+      this.page$.pipe(
+        switchMap((page: number) =>
+          this.locationService.getAll(page, name).pipe(
+            catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] })),
+          ),
         ),
       ),
     ),
   );
 
   nextPage() {
-    this.page.update((p) => p + 1);
+    const next = this.page$.value + 1;
+    this.page$.next(next);
+    this.pageSignal.set(next);
   }
 }

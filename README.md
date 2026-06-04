@@ -68,7 +68,7 @@ For more information on using the Angular CLI, including detailed command refere
 - Bénéfice : séparation des responsabilités, réutilisabilité, testabilité.
 
 ### 2. OnPush & Immutabilité
-- `ChangeDetectionStrategy.OnPush` : la détection de changement se déclenche uniquement si l'`@Input()` change de référence, si un événement vient du composant, ou si un observable émet via `AsyncPipe`.
+- `ChangeDetectionStrategy.OnPush` : la détection de changement se déclenche uniquement si l'`@Input()` change de référence, si un évènement vient du composant, ou si un observable émet via `AsyncPipe`.
 - L'immutabilité est donc requise : on ne modifie jamais un objet existant, on crée une nouvelle référence (`[...array]`, `Object.assign({}, obj)`) pour que la comparaison par référence détecte le changement.
 - Un `signal()` reste réactif même avec `OnPush`.
 
