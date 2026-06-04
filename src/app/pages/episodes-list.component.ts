@@ -1,31 +1,30 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	inject,
-	signal,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { EpisodeService } from "../services/episode.service";
-import { debounceTime,
-	distinctUntilChanged,
-	startWith,
-	switchMap,
-	catchError,
-	of,
-	combineLatest,
+import {
+  debounceTime,
+  distinctUntilChanged,
+  startWith,
+  switchMap,
+  catchError,
+  of,
 } from "rxjs";
-import { toObservable } from "@angular/core/rxjs-interop";
 import { AsyncPipe } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { PaginatorComponent } from "../components/paginator.component";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
-	selector: "app-episodes-list",
-	standalone: true,
-	imports: [ReactiveFormsModule, AsyncPipe, RouterLink, PaginatorComponent],
-	template: `
+  selector: "app-episodes-list",
+  standalone: true,
+  imports: [ReactiveFormsModule, AsyncPipe, RouterLink, PaginatorComponent],
+  template: `
     <h2>Épisodes</h2>
-
     <div class="filters">
       <input [formControl]="searchCtrl" type="text" placeholder="Rechercher par nom...">
     </div>
@@ -49,31 +48,42 @@ import { PaginatorComponent } from "../components/paginator.component";
       <p>Chargement...</p>
     }
   `,
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+    .card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 1rem; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: transform 0.15s ease, box-shadow 0.15s ease; cursor: pointer; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+    h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+    p { color: #666; margin: 0.25rem 0; }
+    .filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filters input { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; min-width: 220px; }
+  `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EpisodesListComponent {
-	private readonly episodeService = inject(EpisodeService);
-	private readonly page = signal(1);
-	readonly currentPage = this.page.asReadonly();
+  private readonly episodeService = inject(EpisodeService);
+  private readonly page = signal(1);
+  readonly currentPage = this.page.asReadonly();
 
-	searchCtrl = new FormControl("", { nonNullable: true });
+  searchCtrl = new FormControl("", { nonNullable: true });
 
-	readonly data$ = combineLatest([
-		this.searchCtrl.valueChanges.pipe(
-			startWith(""),
-			debounceTime(300),
-			distinctUntilChanged(),
-		),
-		toObservable(this.page),
-	]).pipe(
-		switchMap(([name, p]) =>
-			this.episodeService
-				.getAll(p, name)
-				.pipe(catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] }))),
-		),
-	);
+  readonly data$ = this.searchCtrl.valueChanges.pipe(
+    startWith(""),
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((name) =>
+      toObservable(this.page).pipe(
+        switchMap((p) =>
+          this.episodeService
+            .getAll(p, name)
+            .pipe(catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] }))),
+        ),
+      ),
+    ),
+  );
 
-	nextPage() {
-		this.page.update(p => p + 1);
-	}
+  nextPage() {
+    this.page.update((p) => p + 1);
+  }
 }

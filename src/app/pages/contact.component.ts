@@ -33,6 +33,19 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
     </form>
   `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	styles: [
+		`
+    h2 { margin-bottom: 1.5rem; }
+    form { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; }
+    input, textarea { padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; font-family: inherit; }
+    input:focus, textarea:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+    small { color: #dc2626; font-size: 0.85rem; }
+    button[type=submit] { padding: 0.75rem; border: none; border-radius: 8px; background: #4f46e5; color: #fff; font-size: 1rem; cursor: pointer; }
+    button[type=submit]:hover:not(:disabled) { background: #4338ca; }
+    button[type=submit]:disabled { opacity: 0.5; cursor: not-allowed; }
+    .success { padding: 1rem; background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; border-radius: 8px; margin-bottom: 1rem; }
+  `,
+  	],
 })
 export class ContactComponent {
 	private readonly fb = inject(FormBuilder);

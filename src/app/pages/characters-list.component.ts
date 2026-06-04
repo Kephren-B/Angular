@@ -1,39 +1,32 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	inject,
-	signal,
-	computed,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  computed,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { CharacterService } from "../services/character.service"; // Corrected path
-import { FavorisService } from "../services/favoris.service"; // Corrected path
+import { CharacterService } from "../services/character.service";
+import { FavorisService } from "../services/favoris.service";
 import {
-	debounceTime,
-	distinctUntilChanged,
-	startWith,
-	switchMap,
-	catchError,
-	of,
-	combineLatest,
-	map,
+  debounceTime,
+  distinctUntilChanged,
+  startWith,
+  switchMap,
+  catchError,
+  of,
+  combineLatest,
 } from "rxjs";
 import { AsyncPipe } from "@angular/common";
 import { CharacterCardComponent } from "../components/character-card.component";
 import { LoaderComponent } from "../components/loader.component";
 
 @Component({
-	selector: "app-characters-list",
-	standalone: true,
-	imports: [
-		ReactiveFormsModule,
-		AsyncPipe,
-		CharacterCardComponent,
-		LoaderComponent,
-	],
-	template: `
+  selector: "app-characters-list",
+  standalone: true,
+  imports: [ReactiveFormsModule, AsyncPipe, CharacterCardComponent, LoaderComponent],
+  template: `
     <h2>Personnages</h2>
-    
     <div class="filters">
       <input [formControl]="searchCtrl" type="text" placeholder="Rechercher un nom...">
       <select [formControl]="statusCtrl">
@@ -58,27 +51,34 @@ import { LoaderComponent } from "../components/loader.component";
       <app-loader></app-loader>
     }
   `,
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+    .filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filters input, .filters select { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; min-width: 220px; }
+  `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharactersListComponent {
-	private readonly characterService = inject(CharacterService);
-	readonly favorisService = inject(FavorisService);
+  private readonly characterService = inject(CharacterService);
+  readonly favorisService = inject(FavorisService);
 
-	searchCtrl = new FormControl("", { nonNullable: true });
-	statusCtrl = new FormControl("all", { nonNullable: true });
+  searchCtrl = new FormControl("", { nonNullable: true });
+  statusCtrl = new FormControl("all", { nonNullable: true });
 
-	readonly data$ = combineLatest([
-		this.searchCtrl.valueChanges.pipe(
-			startWith(""),
-			debounceTime(300),
-			distinctUntilChanged(),
-		),
-		this.statusCtrl.valueChanges.pipe(startWith("all")),
-	]).pipe(
-		switchMap(([name, status]) =>
-			this.characterService
-				.getAll(1, name, status)
-				.pipe(catchError(() => of({ info: {}, results: [] }))),
-		),
-	);
+  readonly data$ = combineLatest([
+    this.searchCtrl.valueChanges.pipe(
+      startWith(""),
+      debounceTime(300),
+      distinctUntilChanged(),
+    ),
+    this.statusCtrl.valueChanges.pipe(startWith("all")),
+  ]).pipe(
+    switchMap(([name, status]) =>
+      this.characterService
+        .getAll(1, name, status)
+        .pipe(catchError(() => of({ info: { pages: 0, count: 0, next: null, prev: null }, results: [] }))),
+    ),
+  );
 }

@@ -35,8 +35,11 @@ import { Character } from "../models/character.model";
   `,
 	styles: [
 		`
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-    .stat-card { padding: 1rem; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
+    h1 { margin-bottom: 2rem; font-size: 2rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .stat-card { padding: 1.5rem; border: 1px solid #e0e0e0; border-radius: 12px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .stat-card h3 { margin-bottom: 0.75rem; font-size: 1.1rem; color: #4f46e5; }
+    .stat-card p { margin: 0.35rem 0; }
   `,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,

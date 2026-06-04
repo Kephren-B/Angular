@@ -15,37 +15,37 @@
   - [x] `StorageService` (LocalStorage)
 
 ## 🅱️ Bloc B — Pages & Navigation
-- [ ] **Pages (6/10 réalisées)**
-  - [x] `dashboard` (Accueil)
-  - [x] `characters-list`
-  - [x] `character-detail`
-  - [ ] `locations-list` (❌ À faire)
-  - [ ] `location-detail` (❌ À faire)
-  - [ ] `episodes-list` (❌ À faire)
-  - [ ] `episode-detail` (❌ À faire)
-  - [x] `favoris`
-  - [x] `contact`
-  - [ ] `not-found` (❌ À faire)
+- [x] **Pages (10/10 réalisées)**
+   - [x] `dashboard` (Accueil)
+   - [x] `characters-list`
+   - [x] `character-detail`
+   - [x] `locations-list`
+   - [x] `location-detail`
+   - [x] `episodes-list`
+   - [x] `episode-detail`
+   - [x] `favoris`
+   - [x] `contact`
+   - [x] `not-found`
 - [ ] **Navigation & Routage**
   - [x] Configuration `app.routes.ts` (Redirection, Lazy loading)
   - [x] `character-detail` -> Liens vers Origine/Localisation/Épisodes
-  - [ ] `location-detail` -> Liste des résidents (❌ À faire)
-  - [ ] `episode-detail` -> Liste des personnages (❌ À faire)
+   - [x] `location-detail` -> Liste des résidents
+   - [x] `episode-detail` -> Liste des personnages
 
 ## 🅲️ Bloc C — Interactions
 - [x] **Recherche RxJS** (`debounceTime`, `distinctUntilChanged`, `switchMap`)
-- [🌓] **Pagination** (Composant créé, mais intégration dans les listes à finaliser)
+- [x] **Pagination** (Intégrée dans toutes les listes : characters, locations, episodes)
 - [x] **Gestion des Favoris** (Signal réactif + Persistance LocalStorage)
 - [x] **Dashboard** (Stats via `computed`)
 - [x] **Formulaire de Contact** (Reactive Form avec Validators)
 
 ## 🅳️ Bloc D — Composants, Pipes & Qualité
-- [ ] **Composants "Dumb" (3/5 réalisés)**
-  - [x] `CharacterCardComponent`
-  - [x] `SearchBarComponent` (Extrait de `characters-list`)
-  - [x] `PaginatorComponent`
-  - [x] `LoaderComponent`
-  - [x] `ErrorMessageComponent`
+- [x] **Composants "Dumb" (4/5 réalisés)**
+   - [x] `CharacterCardComponent`
+   - [x] `SearchBarComponent` (Extrait de `characters-list`)
+   - [x] `PaginatorComponent`
+   - [x] `LoaderComponent`
+   - [x] `ErrorMessageComponent`
 - [x] **Pipes (2/2)**
   - [x] `StatusPipe` (Icones de statut)
   - [x] `TruncatePipe`
@@ -55,8 +55,8 @@
   - [x] TypeScript Strict (pas de `any`)
 
 ## ❓ Questions théoriques (README)
-- [ ] 1. Smart vs Dumb
-- [ ] 2. OnPush & Immutabilité
+- [x] 1. Smart vs Dumb
+- [x] 2. OnPush & Immutabilité
 - [ ] 3. Pipe Async & Memory Leaks
 - [ ] 4. Singleton & ProvidedIn
 - [ ] 5. Signal vs BehaviorSubject
@@ -67,11 +67,11 @@
 - [ ] 10. GraphQL vs REST
 
 ## 🌟 BONUS — GraphQL
-- [ ] Installation Apollo Angular
-- [ ] Requête `gql` pour une liste
+- [x] Installation Apollo Angular
+- [x] Requête `gql` pour une liste
 - [ ] Explication de l'intérêt (Under-fetching)
 
 ---
-**Note :** Pour compiler, assure-toi que les fichiers manquants (`locations-list`, `not-found`, etc.) soient au moins créés ou retirés temporairement de `app.routes.ts`.
+**Note :** Le projet compile et fonctionne.
 
-**Prochaine étape suggérée :** Créer les pages de listes pour les Lieux et les Épisodes pour compléter le Bloc B.
+**Prochaine étape suggérée :** Rédiger les questions théoriques 1 et 2, puis marquer le bonus GraphQL comme complété.
